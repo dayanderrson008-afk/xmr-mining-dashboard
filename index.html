@@ -10,10 +10,19 @@
 <div class="card"><span class="muted">Temperatura simulada</span><div class="value" id="temp">58 °C</div><span class="green">● Valor fictício</span></div>
 <div class="card"><span class="muted">Tempo de atividade</span><div class="value" id="uptime">00:14:32</div><span class="muted">Relógio de demonstração</span></div></section>
 <h3>Desempenho ao longo do tempo</h3><section class="lower"><div class="card"><span class="muted">Hashrate (kH/s) — dados simulados</span><canvas id="chart" class="chart"></canvas></div><div class="card"><span class="muted">Detalhes do sistema</span><div class="row"><span class="muted">Moeda</span><b>Monero (XMR)</b></div><div class="row"><span class="muted">Modo</span><b>Simulação local</b></div><div class="row"><span class="muted">Pool</span><b class="green">Não conectada</b></div><div class="row"><span class="muted">Carteira</span><b>Não configurada</b></div><div class="row"><span class="muted">Atualização</span><b>Agora</b></div></div></section>
+<h3>Conexão do minerador</h3>
+<section class="card" style="margin-top:12px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+<div><b id="connTitle">Minerador não conectado</b><p class="muted" id="connDesc">Área de teste — nenhuma conexão real está configurada.</p></div>
+<button class="btn" id="connectDemo">Testar conexão de demonstração</button>
+</div>
+<div class="row"><span class="muted">Estado</span><b id="connState">Desconectado</b></div>
+<div class="row"><span class="muted">Fonte dos dados</span><b>Simulação do navegador</b></div>
+</section>
 <div class="foot">Protótipo educativo · Nenhuma mineração ou transação real é executada.</div></main>
 <script>
 let active=true,secs=872,pts=Array.from({length:30},()=>2+Math.random());const $=x=>document.getElementById(x);
 function draw(){let c=$('chart'),r=c.getBoundingClientRect(),d=window.devicePixelRatio||1;c.width=r.width*d;c.height=210*d;let x=c.getContext('2d');x.scale(d,d);x.clearRect(0,0,r.width,210);x.strokeStyle='#263444';for(let k=0;k<4;k++){x.beginPath();x.moveTo(0,20+k*55);x.lineTo(r.width,20+k*55);x.stroke()}x.beginPath();pts.forEach((v,i)=>{let px=i*r.width/(pts.length-1),py=190-(v/3)*160;i?x.lineTo(px,py):x.moveTo(px,py)});x.strokeStyle='#65e6a5';x.lineWidth=2.5;x.stroke()}
 $('toggle').onclick=()=>{active=!active;$('toggle').textContent=active?'Pausar simulação':'Retomar simulação';$('status').textContent=active?'● SIMULAÇÃO ATIVA':'● SIMULAÇÃO PAUSADA';$('status').style.color=active?'#65e6a5':'#93a4b7'};
-setInterval(()=>{if(!active)return;secs++;$('uptime').textContent=[Math.floor(secs/3600),Math.floor(secs%3600/60),secs%60].map(n=>String(n).padStart(2,'0')).join(':');$('hash').textContent=(2.2+Math.random()*.5).toFixed(2)+' kH/s';$('temp').textContent=Math.round(55+Math.random()*8)+' °C';pts.push(2+Math.random());pts.shift();draw()},1000);window.onresize=draw;draw();
+setInterval(()=>{if(!active)return;secs++;$('uptime').textContent=[Math.floor(secs/3600),Math.floor(secs%3600/60),secs%60].map(n=>String(n).padStart(2,'0')).join(':');$('hash').textContent=(2.2+Math.random()*.5).toFixed(2)+' kH/s';$('temp').textContent=Math.round(55+Math.random()*8)+' °C';pts.push(2+Math.random());pts.shift();draw()},1000);$('connectDemo').onclick=()=>{const connected=$('connState').textContent!=='Conectado (demo)';$('connState').textContent=connected?'Conectado (demo)':'Desconectado';$('connTitle').textContent=connected?'Conexão de demonstração ativa':'Minerador não conectado';$('connDesc').textContent=connected?'Dados ilustrativos recebidos; não são métricas reais.':'Área de teste — nenhuma conexão real está configurada.';$('connectDemo').textContent=connected?'Desconectar demo':'Testar conexão de demonstração';$('connectDemo').classList.toggle('pause',connected)};window.onresize=draw;draw();
 </script></body></html>
